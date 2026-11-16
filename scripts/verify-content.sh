@@ -62,5 +62,25 @@ def enc(s):
 if enc("DESTRUCTOR") not in raw:
     raise SystemExit("Spanish move names not found in the ROM (is locale/es applied?)")
 print("OK Spanish text present")
+# Archive symbols: must exist, be EWRAM addresses and belong to this ROM.
+import hashlib
+sym_rel = m.get("archive", {}).get("symbols")
+if not sym_rel:
+    raise SystemExit('manifest missing "archive": {"symbols": ...}')
+sym_candidates = [
+    root / "dist" / "content" / "staging" / sym_rel,
+    root / "web" / "game" / Path(sym_rel).name,
+]
+sym_path = next((p for p in sym_candidates if p.is_file()), None)
+if sym_path is None:
+    raise SystemExit(f"{Path(sym_rel).name} not found under web/game/ (run scripts/build-rom.sh)")
+syms = json.loads(sym_path.read_text())
+for name in ("gPlayerParty", "gPlayerPartyCount"):
+    addr = syms.get(name)
+    if not isinstance(addr, int) or not 0x02000000 <= addr < 0x02040000:
+        raise SystemExit(f"{sym_path.name}: bad {name}={addr!r}")
+if syms.get("romSha256") != hashlib.sha256(raw).hexdigest():
+    raise SystemExit(f"{sym_path.name} was generated from a different ROM; rebuild with scripts/build-rom.sh")
+print(f"OK archive symbols match the ROM (gPlayerParty=0x{syms['gPlayerParty']:x})")
 print(f"OK minLauncherVersion={m['compat']['minLauncherVersion']}")
 PY

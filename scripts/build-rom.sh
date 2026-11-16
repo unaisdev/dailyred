@@ -36,6 +36,10 @@ ROM="$GAME/pokefirered_modern.gba"
 mkdir -p "$ROOT/web/game"
 rm -f "$ROOT/web/game/dailyred.gba"
 gzip -9 -n -c "$ROM" > "$ROOT/web/game/dailyred.gba.gz"
+# RAM addresses for the launcher's historical archive. They change with every
+# code/compiler change, so they ship in the content pack next to the ROM.
+python3 "$ROOT/scripts/gen-symbols.py" "$TC/arm-none-eabi/bin/arm-none-eabi-nm" \
+  "$GAME/pokefirered_modern.elf" "$ROM" "$ROOT/web/game/symbols.json"
 # RED's battle sprite for the site's title card (from the decomp, like the ROM).
 cp "$GAME/graphics/trainers/front_pics/red_front_pic.png" "$ROOT/web/game/red.png"
 echo

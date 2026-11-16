@@ -6,18 +6,24 @@
 #   dailyred-content-vX.Y.Z.zip        ← copia versionada
 #   SHA256SUMS                         ← checksums (nombres de asset de Release)
 #
-# El zip lleva en la raíz: game.manifest.json, rom/dailyred.gba.gz, assets/.
+# El zip lleva en la raíz: game.manifest.json, rom/dailyred.gba.gz, assets/,
+# archive/symbols.json (direcciones de RAM para el archivo histórico).
 # Uso: scripts/package-content.sh
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 MANIFEST="$ROOT/content/game.manifest.json"
 ROM_SRC="$ROOT/web/game/dailyred.gba.gz"
 ASSETS_SRC="$ROOT/content/assets"
+SYMBOLS_SRC="$ROOT/web/game/symbols.json"
 OUT_DIR="$ROOT/dist/content"
 STAGING="$OUT_DIR/staging"
 
 if [[ ! -f "$ROM_SRC" ]]; then
   echo "Missing ROM $ROM_SRC — run scripts/build-rom.sh first." >&2
+  exit 1
+fi
+if [[ ! -f "$SYMBOLS_SRC" ]]; then
+  echo "Missing $SYMBOLS_SRC — run scripts/build-rom.sh first." >&2
   exit 1
 fi
 if [[ ! -f "$ASSETS_SRC/red.png" ]]; then
@@ -31,10 +37,11 @@ ID=$(python3 -c "import json; print(json.load(open('$MANIFEST'))['id'])")
 VER=$(python3 -c "import json; print(json.load(open('$MANIFEST'))['contentVersion'])")
 
 rm -rf "$STAGING"
-mkdir -p "$STAGING/rom" "$STAGING/assets"
+mkdir -p "$STAGING/rom" "$STAGING/assets" "$STAGING/archive"
 cp "$MANIFEST" "$STAGING/game.manifest.json"
 cp "$ROM_SRC" "$STAGING/rom/dailyred.gba.gz"
 cp "$ASSETS_SRC"/* "$STAGING/assets/"
+cp "$SYMBOLS_SRC" "$STAGING/archive/symbols.json"
 
 # Re-verify against the staged copy.
 python3 - "$STAGING/rom/dailyred.gba.gz" <<'PY'

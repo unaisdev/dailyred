@@ -17,6 +17,9 @@
     "titleAsset": "assets/red.png",
     "mutedKey": "hortelano:dailyred:muted"
   },
+  "archive": {
+    "symbols": "archive/symbols.json"
+  },
   "compat": {
     "minLauncherVersion": "0.1.0",
     "runnerAdapters": [
