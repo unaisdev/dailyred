@@ -1,13 +1,17 @@
 # Everything below is recreated by the scripts in scripts/ (see README).
 
-# scripts/setup-macos.sh
+# scripts/setup-macos.sh (dir or symlink to a sibling toolchain)
 /.toolchain/
+/.toolchain
 # scripts/get-pokefirered.sh (pret/pokefirered + patches/)
 /pokefirered/
 # scripts/fetch-vendor.sh
 /web/vendor/
-# scripts/build-rom.sh. Build output; don't commit it.
-/web/game/
+# scripts/build-rom.sh writes web/game/. It IS committed: the Release
+# workflow packages web/game/dailyred.gba.gz into the content pack.
+
+# scripts/package-content.sh
+/dist/
 
 # Wrangler's local cache (Cloudflare deploys)
 /.wrangler/

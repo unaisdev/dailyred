@@ -1,0 +1,182 @@
+# Publica un content pack nuevo en cada push a main (patch bump automático).
+# También responde a tags content-v* y a lanzamientos manuales.
+#
+# El launcher (hortelanos-daily) lee:
+#   GET /repos/unaisdev/dailyred/releases/latest
+#   asset: dailyred-content.zip (+ SHA256SUMS)
+#
+# La ROM no se compila aquí: se compila en local (scripts/build-rom.sh) y se
+# sube en web/game/dailyred.gba.gz. Este workflow la verifica y la empaqueta.
+name: Release content pack
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'content-v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'SemVer sin prefijo (ej. 0.2.1). Vacío = siguiente patch automático'
+        required: false
+        default: ''
+
+concurrency:
+  group: release-content
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Needed so the version-bump commit can push back to main.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve version
+        id: ver
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+
+          latest_tag() {
+            gh release list --limit 100 --json tagName \
+              --jq '[.[].tagName | select(startswith("content-v"))] | first // empty'
+          }
+
+          bump_patch() {
+            python3 - "$1" <<'PY'
+          import sys
+          ver = sys.argv[1].strip().lstrip("v")
+          parts = ver.split(".")
+          while len(parts) < 3:
+              parts.append("0")
+          major, minor, patch = (int(parts[0]), int(parts[1]), int(parts[2]))
+          print(f"{major}.{minor}.{patch + 1}")
+          PY
+          }
+
+          manifest_version() {
+            python3 -c "import json; print(json.load(open('content/game.manifest.json'))['contentVersion'])"
+          }
+
+          if [ -n "${INPUT_VERSION:-}" ]; then
+            VER="$INPUT_VERSION"
+            SOURCE="workflow_dispatch"
+          elif [[ "${GITHUB_REF_TYPE}" == "tag" && "${GITHUB_REF_NAME}" == content-v* ]]; then
+            VER="${GITHUB_REF_NAME#content-v}"
+            SOURCE="tag"
+          elif [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == "main" ]]; then
+            LATEST="$(latest_tag || true)"
+            if [ -n "$LATEST" ]; then
+              VER="$(bump_patch "${LATEST#content-v}")"
+            else
+              # First release: use the manifest version as is (0.2.0).
+              VER="$(manifest_version)"
+            fi
+            SOURCE="main-push"
+          else
+            VER="$(manifest_version)"
+            SOURCE="manifest"
+          fi
+
+          # Guarantee a free tag (race / manual tags).
+          while gh release view "content-v${VER}" >/dev/null 2>&1; do
+            echo "content-v${VER} already exists — bumping patch"
+            VER="$(bump_patch "$VER")"
+          done
+
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+          echo "tag=content-v$VER" >> "$GITHUB_OUTPUT"
+          echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
+          echo "Resolved contentVersion=$VER (source=$SOURCE)"
+
+          export VER
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          path = Path('content/game.manifest.json')
+          m = json.loads(path.read_text())
+          m['contentVersion'] = os.environ['VER']
+          path.write_text(json.dumps(m, indent=2) + '\n')
+          print('Wrote content/game.manifest.json contentVersion =', m['contentVersion'])
+          PY
+
+      - name: Build release notes body
+        id: notes
+        env:
+          TAG: ${{ steps.ver.outputs.tag }}
+          VER: ${{ steps.ver.outputs.version }}
+          SOURCE: ${{ steps.ver.outputs.source }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist/content
+          NOTES_FILE="$PWD/dist/content/RELEASE_BODY.md"
+          SHA=$(git rev-parse HEAD)
+          # Solo ## Novedades (tono jugador). Capturar ANTES de vaciar NOVEDADES.md.
+          scripts/build-release-notes.sh "$NOTES_FILE" "$TAG" "$VER" "$SOURCE" "$SHA"
+          echo "notes_file=$NOTES_FILE" >> "$GITHUB_OUTPUT"
+          cat "$NOTES_FILE"
+
+      - name: Verify ROM is present
+        run: |
+          test -f web/game/dailyred.gba.gz
+          test -f content/assets/red.png
+          gzip -t web/game/dailyred.gba.gz
+
+      - name: Package content
+        run: scripts/package-content.sh
+
+      - name: Commit contentVersion bump on main
+        if: steps.ver.outputs.source == 'main-push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          scripts/clear-novedades.sh
+          git add content/game.manifest.json content/NOVEDADES.md
+          if git diff --cached --quiet; then
+            echo "nothing to commit for bump/novedades"
+          else
+            git commit -m "chore: bump contentVersion to ${{ steps.ver.outputs.version }}"
+            git push origin HEAD:main
+          fi
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.ver.outputs.tag }}
+          VER: ${{ steps.ver.outputs.version }}
+          NOTES_FILE: ${{ steps.notes.outputs.notes_file }}
+        run: |
+          set -euo pipefail
+          SHA=$(git rev-parse HEAD)
+          test -f "$NOTES_FILE"
+
+          ASSETS=(
+            dist/content/dailyred-content.zip
+            dist/content/SHA256SUMS
+          )
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release ${TAG} already exists — refreshing assets"
+            gh release upload "$TAG" "${ASSETS[@]}" --clobber
+            gh release edit "$TAG" --notes-file "$NOTES_FILE" --latest
+          else
+            gh release create "$TAG" "${ASSETS[@]}" \
+              --title "Daily Red content ${VER}" \
+              --notes-file "$NOTES_FILE" \
+              --target "$SHA" \
+              --latest
+          fi
+
+          echo "Published https://github.com/${{ github.repository }}/releases/tag/${TAG}"

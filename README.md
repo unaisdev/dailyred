@@ -1,5 +1,12 @@
 # Daily Red
 
+> **En español.** Esta versión compila la ROM con los textos de **Rojo Fuego
+> (España)** (`locale/es`, aplicado por `scripts/get-pokefirered.sh`) y publica
+> el content pack de Daily Red para el launcher
+> [Hortelano's Daily](https://github.com/unaisdev/hortelanos-daily): cada push a
+> `main` genera un Release `content-v*` con `dailyred-content.zip`. Ver
+> [AGENTS.md](AGENTS.md).
+
 A daily Pokémon battle in the browser, like Wordle: once a day you press
 **Play**, get the day's six random level 100 Pokémon from Generations 1–3
 (everyone gets the same team that day), and climb to RED at the top of the

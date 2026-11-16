@@ -1,0 +1,14 @@
+# Text files always use LF, also on Windows checkouts: the pokefirered build
+# tools (preproc, mapjson, charmap) reject CRLF.
+* text=auto eol=lf
+
+# The patch must reach git apply byte for byte.
+*.patch -text
+
+# Binary assets.
+*.gz binary
+*.gba binary
+*.bin binary
+*.png binary
+*.woff2 binary
+*.wasm binary
