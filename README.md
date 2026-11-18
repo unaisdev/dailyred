@@ -6,6 +6,12 @@
 > [Hortelano's Daily](https://github.com/unaisdev/hortelanos-daily): cada push a
 > `main` genera un Release `content-v*` con `dailyred-content.zip`. Ver
 > [AGENTS.md](AGENTS.md).
+>
+> **Créditos:** basado en [Daily Red](https://github.com/amoi-builds/dailyred)
+> de amoi-builds. Tablas de texto en castellano de
+> [Acimut/pokefirered](https://github.com/Acimut/pokefirered) (rama
+> `pret_europe`, commit `6651454608dcc61356b60c20154214d773689730`). Construido
+> sobre [pret/pokefirered](https://github.com/pret/pokefirered).
 
 A daily Pokémon battle in the browser, like Wordle: once a day you press
 **Play**, get the day's six random level 100 Pokémon from Generations 1–3
@@ -257,8 +263,10 @@ come from FireRed's usual name-based formula and aren't configurable.
 4. When you're happy, run `scripts/save-patch.sh` and commit
    `patches/pokefirered-dailyred.patch`.
 
-`pokefirered/`, `.toolchain/`, `web/vendor/` and `web/game/` are not tracked
-(see `.gitignore`); a clean checkout recreates them with the scripts above.
+`pokefirered/`, `.toolchain/` and `web/vendor/` are not tracked (see
+`.gitignore`); a clean checkout recreates them with the scripts above.
+`web/game/` is tracked: it holds the built Spanish ROM that the content pack
+ships.
 `git -C pokefirered diff` shows all game changes against upstream.
 
 To play the ROM outside the browser, open
@@ -333,7 +341,7 @@ it at http://localhost:8080:
 ```
 web/index.html  app.js  daily.js  game-link.js  game-files.js  rom-config.js  style.css  favicon.svg  licenses.txt
 web/vendor/     emulator (3.4 MB) + font
-web/game/       dailyred.gba.gz (5.5 MB), built on your machine
+web/game/       dailyred.gba.gz (5.5 MB, Spanish), committed; rebuild with build-rom.sh
 ```
 
 To use another port, pass it: `node scripts/serve.mjs 3000`. Your stats are
@@ -349,8 +357,15 @@ Pokémon and all related names, characters and game content are © Nintendo,
 Creatures Inc. and GAME FREAK inc.
 
 This repository contains Daily Red's own work: the changes in `patches/`, the
-website and the tests. It doesn't include pret/pokefirered or a built ROM; the
-scripts fetch the decompilation from pret's repository and build locally.
+website and the tests. It doesn't include the pret/pokefirered source tree;
+the scripts fetch the decompilation from pret's repository. It does include a
+built ROM, `web/game/dailyred.gba.gz` (Spanish), which the content pack ships.
+
+Credits: based on [Daily Red](https://github.com/amoi-builds/dailyred) by
+amoi-builds. Spanish text tables from
+[Acimut/pokefirered](https://github.com/Acimut/pokefirered) (branch
+`pret_europe`, commit `6651454608dcc61356b60c20154214d773689730`). Built on
+[pret/pokefirered](https://github.com/pret/pokefirered).
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page
