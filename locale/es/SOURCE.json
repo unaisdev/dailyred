@@ -3,5 +3,5 @@
   "ref": "pret_europe",
   "commit": "6651454608dcc61356b60c20154214d773689730",
   "language": "es-ES",
-  "notes": "Official Spanish (Spain) FireRed string tables. Daily Red ships a single castellano ROM (no bilingual switch)."
+  "notes": "Spanish text tables based on Acimut/pokefirered. Daily Red ships a single castellano ROM (no bilingual switch)."
 }

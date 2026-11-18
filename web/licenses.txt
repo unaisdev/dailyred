@@ -12,7 +12,7 @@ Daily Red (original project)
   Based on Daily Red by amoi-builds: https://github.com/amoi-builds/dailyred
 
 Spanish text tables (locale/es)
-  Official Spanish (Spain) FireRed string tables from Acimut/pokefirered,
+  Spanish text tables based on Acimut/pokefirered,
   branch pret_europe, commit 6651454608dcc61356b60c20154214d773689730:
   https://github.com/Acimut/pokefirered
 

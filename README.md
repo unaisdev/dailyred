@@ -8,7 +8,7 @@
 > [AGENTS.md](AGENTS.md).
 >
 > **Créditos:** basado en [Daily Red](https://github.com/amoi-builds/dailyred)
-> de amoi-builds. Tablas de texto en castellano de
+> de amoi-builds. Tablas en español basadas en
 > [Acimut/pokefirered](https://github.com/Acimut/pokefirered) (rama
 > `pret_europe`, commit `6651454608dcc61356b60c20154214d773689730`). Construido
 > sobre [pret/pokefirered](https://github.com/pret/pokefirered).
@@ -362,7 +362,7 @@ the scripts fetch the decompilation from pret's repository. It does include a
 built ROM, `web/game/dailyred.gba.gz` (Spanish), which the content pack ships.
 
 Credits: based on [Daily Red](https://github.com/amoi-builds/dailyred) by
-amoi-builds. Spanish text tables from
+amoi-builds. Spanish text tables based on
 [Acimut/pokefirered](https://github.com/Acimut/pokefirered) (branch
 `pret_europe`, commit `6651454608dcc61356b60c20154214d773689730`). Built on
 [pret/pokefirered](https://github.com/pret/pokefirered).
