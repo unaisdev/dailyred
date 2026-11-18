@@ -7,4 +7,7 @@ Tras publicar, este archivo se vacía otra vez.
 **Público:** castellano claro, sin jerga. Nada de tags, SHA, CI ni nombres técnicos.
 Si no lo entendería alguien que solo quiere jugar, no lo pongas.
 
-- Daily Red ahora está en español: menús, movimientos, Pokémon y mensajes de combate.
+<!-- Ejemplo:
+- Arreglado: el combate del día se reiniciaba si cerrabas a medias.
+- RED ya no usa el mismo equipo dos días seguidos.
+-->
