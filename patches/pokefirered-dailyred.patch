@@ -118,10 +118,10 @@ index 0000000..6317762
 +}
 diff --git a/data/maps/DailyRed_Summit/scripts.inc b/data/maps/DailyRed_Summit/scripts.inc
 new file mode 100644
-index 0000000..033ded0
+index 0000000..5783dec
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/scripts.inc
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,80 @@
 +DailyRed_Summit_MapScripts::
 +	.byte 0
 +
@@ -145,6 +145,9 @@ index 0000000..033ded0
 +	message DailyRed_Summit_Text_PlayerWon
 +	waitmessage
 +	waitfanfare
++	waitbuttonpress
++	message DailyRed_Summit_Text_License
++	waitmessage
 +	waitbuttonpress
 +	call DailyRed_Summit_EventScript_BufferRecord
 +	specialvar VAR_RESULT, DailyRed_IsDailyGame
@@ -201,10 +204,10 @@ index 0000000..033ded0
 +	end
 diff --git a/data/maps/DailyRed_Summit/text.inc b/data/maps/DailyRed_Summit/text.inc
 new file mode 100644
-index 0000000..1a0b48b
+index 0000000..d45997d
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/text.inc
-@@ -0,0 +1,33 @@
+@@ -0,0 +1,36 @@
 +DailyRed_Summit_Text_RedIntro::
 +    .string "…\p"
 +    .string "…………$"
@@ -215,10 +218,13 @@ index 0000000..1a0b48b
 +
 +@ Shown in battle when RED wins.
 +DailyRed_Summit_Text_RedVictory::
-+    .string "…$"
++    .string "…………$"
 +
 +DailyRed_Summit_Text_PlayerWon::
 +    .string "You defeated RED!$"
++
++DailyRed_Summit_Text_License::
++    .string "You got a Champion's License!$"
 +
 +DailyRed_Summit_Text_PlayerLost::
 +    .string "Your team was wiped out…$"
@@ -266,6 +272,68 @@ index d880bf6..485a37e 100644
 +	def_special DailyRed_OnDailyGameOver
 +	def_special DailyRed_IsDailyGame
  gSpecialsEnd::
+diff --git a/graphics/object_events/palettes/npc_1.pal b/graphics/object_events/palettes/npc_1.pal
+new file mode 100644
+index 0000000..7bb5bd9
+--- /dev/null
++++ b/graphics/object_events/palettes/npc_1.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++115 197 164
++255 213 180
++255 197 148
++222 148 115
++123 65 65
++255 164 180
++213 106 123
++139 65 82
++148 197 246
++90 139 189
++16 49 82
++180 164 98
++123 115 65
++57 57 24
++255 255 255
++0 0 0
+diff --git a/graphics/object_events/pics/people/frontier_brains/spenser.png b/graphics/object_events/pics/people/frontier_brains/spenser.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..cd8563d5e93f964b2f955309d50f7f9c5ebc935a
+GIT binary patch
+literal 663
+zcmV;I0%-k-P)<h;3K|Lk000e1NJLTq0058x001Ba0{{R352Eb;0000mP)t-sbH$|p
+z)wKV`l-`tcdqF|}q_ov)dy7F*l*RU1i@gvrQnaLEdvifKIT-){{{R309c`Y+0006a
+zNkl<ZNQv##KWp1S7zXecs-=Sv5}jLo>f9FJEeSMLBrWZy@fT=6MHYox6goA~4-hUU
+zb1)^L_984L6c5Ei4z-IQA*k=2EJZrS9XfRKEf4oc&rgRy0Nb%0+ws3f80zW$Q%^8(
+zm`dATCwaaBco<x#F?jmJ@meWthj?wE2X(<Z9}R5Vc?ICh#Fc#vxzhtSfDP;uTU9oR
+zA+rW_NC)c#UpTf<MMM?&FP4O`2Y?M=oe+rSp1=nKS;W+wQq}@=NC($xxG#S_`#tmw
+zml8sU9{8op0@ea_NCWFMTzO|zghLh)*JrE+bfF$tCj`{CRkJKoA{{cX1#}@DY|>zR
+zLw6Z^M!0))^cg>6NSE~8r#7HLU9d@i=YtSG_n!ppOB5aAl}PwDI^4YnG^htQ@cUSZ
+zRltIqB#J^TqQOoS%^N_6df+<2ND?8&2P5NV937BQ3N(slUIS>54%P{fjxVp1^BnHZ
+zvN^?9F2k=`HuD-lgSy~%uSrOc<JIDP1b0)EE&z%+QG$6^0SdZ8D6Jq3Y!Xt=c~!*u
+zi7a}Ysx+tZD!m$EVSIgpS)|7ml-`3M=ef$UyqbkYyu^dIoS)*n!0HLeB0kBi5kR(>
+zR7E(K`{sgwlbIkm!=i-qESLY0GPg>6ps;c)S4FrY*Khd+$RaTLsoKZ6+Bdm6SDMqw
+x8_d_KS^o9UY2mgik`xv}bzDO0RANyr{{c>Yma_8XH)sF=002ovPDHLkV1nZ@Aq4;c
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics_file_rules.mk b/graphics_file_rules.mk
+index 39b952c..1b424b8 100644
+--- a/graphics_file_rules.mk
++++ b/graphics_file_rules.mk
+@@ -183,6 +183,10 @@ $(BATTRANSGFXDIR)/vs_frame.4bpp: %.4bpp: %.png
+ $(PARTYMENUGFXDIR)/bg.4bpp: %.4bpp: %.png
+ 	$(GFX) $< $@ -num_tiles 62 -Wnum_tiles
+ 
++# Daily Red: the player sprite is a 144x32 sheet of 16x32 frames (pokeemerald layout).
++graphics/object_events/pics/people/frontier_brains/spenser.4bpp: %.4bpp: %.png
++	$(GFX) $< $@ -mwidth 2 -mheight 4
++
+ $(FIELDEFFECTSGFXDIR)/pics/underwater_bubbles.4bpp: %.4bpp: %.png
+ 	$(GFX) $< $@ -mwidth 2 -mheight 4
+ 
 diff --git a/include/constants/dailyred.h b/include/constants/dailyred.h
 new file mode 100644
 index 0000000..27c41b2
@@ -286,10 +354,10 @@ index 0000000..27c41b2
 +
 +#endif // GUARD_CONSTANTS_DAILYRED_H
 diff --git a/include/constants/event_objects.h b/include/constants/event_objects.h
-index 9d8c514..2bddf55 100644
+index 9d8c514..54707ba 100644
 --- a/include/constants/event_objects.h
 +++ b/include/constants/event_objects.h
-@@ -155,8 +155,10 @@
+@@ -155,8 +155,13 @@
  #define OBJ_EVENT_GFX_DEOXYS_A 149
  #define OBJ_EVENT_GFX_DEOXYS_N 150
  #define OBJ_EVENT_GFX_SS_ANNE 151
@@ -297,7 +365,10 @@ index 9d8c514..2bddf55 100644
 +#define OBJ_EVENT_GFX_DAILYRED_RED 152
  
 -#define NUM_OBJ_EVENT_GFX     152
-+#define NUM_OBJ_EVENT_GFX     153
++// Daily Red: the player's overworld sprite (Spenser, as HORTE in Daily Steven).
++#define OBJ_EVENT_GFX_SPENSER 153
++
++#define NUM_OBJ_EVENT_GFX     154
  
  // These are dynamic object gfx ids.
  // They correspond with the values of the VAR_OBJ_GFX_ID_X vars.
@@ -338,7 +409,7 @@ index 5c7bbf8..e477fa9 100644
  #define VAR_0x402D                         0x402D
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 0000000..47b058b
+index 0000000..99ef474
 --- /dev/null
 +++ b/include/dailyred.h
 @@ -0,0 +1,42 @@
@@ -348,7 +419,7 @@ index 0000000..47b058b
 +// Daily Red: a one-battle challenge mode built on FireRed.
 +//
 +// The player boots straight onto a snowy mountain peak (MAP_DAILY_RED_SUMMIT)
-+// as LEAF with six random level 100 Pokemon, climbs to RED and talks to him
++// as HORTE with six random level 100 Pokemon, climbs to RED and talks to him
 +// to start a normal
 +// FireRed trainer battle. Win or lose, a new team is generated and the next
 +// run starts in the same room.
@@ -436,7 +507,7 @@ index 6d62084..44f97e4 100644
      DoTrainerBattle();
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 0000000..1ec6e68
+index 0000000..76fee5e
 --- /dev/null
 +++ b/src/dailyred.c
 @@ -0,0 +1,221 @@
@@ -517,7 +588,7 @@ index 0000000..1ec6e68
 +
 +extern u16 gTrainerId; // main.c: low half of the player's trainer ID
 +
-+static const u8 sText_PlayerName[] = _("LEAF");
++static const u8 sText_PlayerName[] = _("HORTE");
 +static const u8 sText_RivalName[] = _("RED");
 +
 +// The config is read through volatile pointers: the compiler would otherwise
@@ -545,7 +616,7 @@ index 0000000..1ec6e68
 +    return GetInjectedSeed() != 0;
 +}
 +
-+// Fresh, unsaved game data every boot: LEAF, female, fast text, SET battle
++// Fresh, unsaved game data every boot: HORTE, male, fast text, SET battle
 +// style. CB2_NewGame then calls NewGameInitData, which calls
 +// DailyRed_InitNewGame.
 +static void StartNewGame(void)
@@ -553,10 +624,10 @@ index 0000000..1ec6e68
 +    Sav2_ClearSetDefault();
 +    SetPokemonCryStereo(gSaveBlock2Ptr->optionsSound);
 +    gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
-+    // No "Will LEAF change POKeMON?" when RED's Pokemon faints. The Options
++    // No "Will HORTE change POKeMON?" when RED's Pokemon faints. The Options
 +    // menu keeps this locked (option_menu.c).
 +    gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
-+    gSaveBlock2Ptr->playerGender = FEMALE; // FireRed's own female player, LEAF
++    gSaveBlock2Ptr->playerGender = MALE; // FireRed's male player, like Daily Steven
 +    StringCopy(gSaveBlock2Ptr->playerName, sText_PlayerName);
 +    StringCopy(gSaveBlock1Ptr->rivalName, sText_RivalName);
 +    SetMainCallback2(CB2_NewGame);
@@ -1255,17 +1326,31 @@ index 498f281..4ee8eb3 100644
  #include "graphics.h"
  #include "constants/items.h"
  #include "constants/moves.h"
+diff --git a/src/data/object_events/object_event_graphics.h b/src/data/object_events/object_event_graphics.h
+index 4e229cb..528ae19 100644
+--- a/src/data/object_events/object_event_graphics.h
++++ b/src/data/object_events/object_event_graphics.h
+@@ -14,6 +14,9 @@ const u16 gObjectEventPaletteNull11[16] = {};
+ const u16 gObjectEventPaletteNull12[16] = {};
+ const u16 gObjectEventPaletteNull13[16] = {};
+ const u16 gObjectEventPaletteNull14[16] = {};
++// Daily Red: the player's sprite (HORTE). Graphics from pokeemerald-expansion.
++const u16 gObjectEventPic_Spenser[] = INCBIN_U16("graphics/object_events/pics/people/frontier_brains/spenser.4bpp");
++const u16 gObjectEventPal_Spenser[] = INCBIN_U16("graphics/object_events/palettes/npc_1.gbapal");
+ const u16 gObjectEventPic_RedNormal[] = INCBIN_U16("graphics/object_events/pics/people/red_normal.4bpp");
+ const u16 gObjectEventPic_RedSurfRun[] = INCBIN_U16("graphics/object_events/pics/people/red_surf_run.4bpp");
+ const u16 gObjectEventPic_GreenNormal[] = INCBIN_U16("graphics/object_events/pics/people/green_normal.4bpp");
 diff --git a/src/data/object_events/object_event_graphics_info.h b/src/data/object_events/object_event_graphics_info.h
-index 78ee95a..43b368e 100644
+index 78ee95a..c93b8f6 100644
 --- a/src/data/object_events/object_event_graphics_info.h
 +++ b/src/data/object_events/object_event_graphics_info.h
-@@ -2923,3 +2923,25 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SSAnne = {
+@@ -2923,3 +2923,46 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SSAnne = {
      .images = sPicTable_SSAnne,
      .affineAnims = gDummySpriteAffineAnimTable,
  };
 +
 +// Daily Red: RED as an NPC. Same sprite as the male player's, but in the
-+// special NPC palette slot: the player (LEAF) uses the player slot, and two
++// special NPC palette slot: the player (HORTE) uses the player slot, and two
 +// different palettes in one slot would recolor one of them.
 +const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DailyRedRed = {
 +    .tileTag = TAG_NONE,
@@ -1285,24 +1370,75 @@ index 78ee95a..43b368e 100644
 +    .images = sPicTable_RedNormal,
 +    .affineAnims = gDummySpriteAffineAnimTable,
 +};
++
++// Daily Red: the player (HORTE) on foot. Same animations as RED/LEAF, own
++// palette, and the player palette slot.
++const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Spenser = {
++    .tileTag = TAG_NONE,
++    .paletteTag = OBJ_EVENT_PAL_TAG_SPENSER,
++    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
++    .size = 512,
++    .width = 16,
++    .height = 32,
++    .paletteSlot = PALSLOT_PLAYER,
++    .shadowSize = SHADOW_SIZE_M,
++    .inanimate = FALSE,
++    .disableReflectionPaletteLoad = TRUE,
++    .tracks = TRACKS_FOOT,
++    .oam = &gObjectEventBaseOam_16x32,
++    .subspriteTables = gObjectEventSpriteOamTables_16x32,
++    .anims = sAnimTable_RedGreenNormal,
++    .images = sPicTable_Spenser,
++    .affineAnims = gDummySpriteAffineAnimTable,
++};
 diff --git a/src/data/object_events/object_event_graphics_info_pointers.h b/src/data/object_events/object_event_graphics_info_pointers.h
-index af2f8af..888c366 100644
+index af2f8af..06a3751 100644
 --- a/src/data/object_events/object_event_graphics_info_pointers.h
 +++ b/src/data/object_events/object_event_graphics_info_pointers.h
-@@ -150,6 +150,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DeoxysD;
+@@ -150,6 +150,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DeoxysD;
  const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DeoxysA;
  const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DeoxysN;
  const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SSAnne;
 +const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DailyRedRed;
++const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Spenser;
  
  
  const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
-@@ -305,4 +306,5 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
+@@ -305,4 +307,6 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
      [OBJ_EVENT_GFX_DEOXYS_A]                 = &gObjectEventGraphicsInfo_DeoxysA,
      [OBJ_EVENT_GFX_DEOXYS_N]                 = &gObjectEventGraphicsInfo_DeoxysN,
      [OBJ_EVENT_GFX_SS_ANNE]                  = &gObjectEventGraphicsInfo_SSAnne,
 +    [OBJ_EVENT_GFX_DAILYRED_RED]             = &gObjectEventGraphicsInfo_DailyRedRed, // Daily Red
++    [OBJ_EVENT_GFX_SPENSER]                  = &gObjectEventGraphicsInfo_Spenser, // Daily Red
  };
+diff --git a/src/data/object_events/object_event_pic_tables.h b/src/data/object_events/object_event_pic_tables.h
+index 70889d7..ec03d34 100644
+--- a/src/data/object_events/object_event_pic_tables.h
++++ b/src/data/object_events/object_event_pic_tables.h
+@@ -1752,3 +1752,23 @@ static const struct SpriteFrameImage sPicTable_Mom[] = {
+     overworld_frame(gObjectEventPic_Mom, 2, 4, 2),
+     overworld_frame(gObjectEventPic_Mom, 2, 4, 2),
+ };
++
++// Daily Red: Spenser as the player. The sheet has 9 frames, so the run frames
++// (9-14, from the surf/run sheet for RED) reuse the walking ones.
++static const struct SpriteFrameImage sPicTable_Spenser[] = {
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 0),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 1),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 2),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 3),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 4),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 5),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 6),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 7),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 8),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 3),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 4),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 5),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 6),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 7),
++    overworld_frame(gObjectEventPic_Spenser, 2, 4, 8),
++};
 diff --git a/src/data/trainers.h b/src/data/trainers.h
 index 02afbfd..58db371 100644
 --- a/src/data/trainers.h
@@ -1323,6 +1459,48 @@ index 02afbfd..58db371 100644
 +        .party = ITEM_CUSTOM_MOVES(gDailyRedBossParty),
 +    },
  };
+diff --git a/src/event_object_movement.c b/src/event_object_movement.c
+index 8e82824..7dd1dcb 100644
+--- a/src/event_object_movement.c
++++ b/src/event_object_movement.c
+@@ -468,6 +468,7 @@ static const u8 gInitialMovementTypeFacingDirections[MOVEMENT_TYPES_COUNT] = {
+ #define OBJ_EVENT_PAL_TAG_RS_GROUDON                  0x1119
+ #define OBJ_EVENT_PAL_TAG_RS_GROUDON_REFLECTION       0x111A
+ #define OBJ_EVENT_PAL_TAG_RS_SUBMARINE_SHADOW         0x111B
++#define OBJ_EVENT_PAL_TAG_SPENSER                     0x111C
+ #define OBJ_EVENT_PAL_TAG_NONE                        0x11FF
+ 
+ #include "data/object_events/object_event_graphics_info_pointers.h"
+@@ -497,6 +498,7 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
+     {gObjectEventPal_Meteorite,               OBJ_EVENT_PAL_TAG_METEORITE},
+     {gObjectEventPal_SSAnne,                  OBJ_EVENT_PAL_TAG_SS_ANNE},
+     {gObjectEventPal_Seagallop,               OBJ_EVENT_PAL_TAG_SEAGALLOP},
++    {gObjectEventPal_Spenser,                 OBJ_EVENT_PAL_TAG_SPENSER},
+     {},
+ };
+ 
+diff --git a/src/field_player_avatar.c b/src/field_player_avatar.c
+index ef086dd..fb0f69b 100644
+--- a/src/field_player_avatar.c
++++ b/src/field_player_avatar.c
+@@ -1133,7 +1133,7 @@ void StopPlayerAvatar(void)
+ }
+ 
+ static const u8 sPlayerAvatarGfxIds[][GENDER_COUNT] = {
+-    [PLAYER_AVATAR_GFX_NORMAL]     = {OBJ_EVENT_GFX_RED_NORMAL,     OBJ_EVENT_GFX_GREEN_NORMAL},
++    [PLAYER_AVATAR_GFX_NORMAL]     = {OBJ_EVENT_GFX_SPENSER,        OBJ_EVENT_GFX_GREEN_NORMAL},
+     [PLAYER_AVATAR_GFX_BIKE]       = {OBJ_EVENT_GFX_RED_BIKE,       OBJ_EVENT_GFX_GREEN_BIKE},
+     [PLAYER_AVATAR_GFX_RIDE]       = {OBJ_EVENT_GFX_RED_SURF,       OBJ_EVENT_GFX_GREEN_SURF},
+     [PLAYER_AVATAR_GFX_FIELD_MOVE] = {OBJ_EVENT_GFX_RED_FIELD_MOVE, OBJ_EVENT_GFX_GREEN_FIELD_MOVE},
+@@ -1239,7 +1239,7 @@ void SetPlayerAvatarStateMask(u8 flags)
+ 
+ static const u8 sPlayerAvatarGfxToStateFlag[][3][GENDER_COUNT] = {
+     [MALE] = {
+-        {OBJ_EVENT_GFX_RED_NORMAL, PLAYER_AVATAR_FLAG_ON_FOOT},
++        {OBJ_EVENT_GFX_SPENSER, PLAYER_AVATAR_FLAG_ON_FOOT},
+         {OBJ_EVENT_GFX_RED_BIKE,   PLAYER_AVATAR_FLAG_MACH_BIKE},
+         {OBJ_EVENT_GFX_RED_SURF,   PLAYER_AVATAR_FLAG_SURFING},
+     },
 diff --git a/src/field_weather_effects.c b/src/field_weather_effects.c
 index 6d69e35..1add29c 100644
 --- a/src/field_weather_effects.c

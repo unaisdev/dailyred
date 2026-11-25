@@ -115,16 +115,16 @@ file server works without special headers. Everything loads from `web/vendor/`.
 |---|---|
 | Copyright screen → straight in (seed set) | `src/intro.c` → `CB2_DailyRed_StartFromCopyright` (`src/dailyred.c`) |
 | Title screen → straight in (no seed) | `src/title_screen.c` → `CB2_DailyRed_StartFromTitle` |
-| New game data: LEAF (FireRed's female player), fast text | `StartNewGame` in `src/dailyred.c`, then vanilla `CB2_NewGame` |
+| New game data: HORTE (FireRed's male player, as in Daily Steven), fast text | `StartNewGame` in `src/dailyred.c`, then vanilla `CB2_NewGame` |
 | Team + warp to the summit instead of the bedroom | `src/new_game.c` → `DailyRed_InitNewGame` |
 | The summit: an open peak with no exits; stairs up to RED, who faces the drop | `data/maps/DailyRed_Summit/`, `data/layouts/DailyRed_Summit/` |
 | Snow on the summit (fixes FireRed's unused snow weather, whose flakes never came back) | `src/field_weather_effects.c` |
-| Talking to RED → battle → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc` and `text.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
+| Talking to RED → battle → "You defeated RED!" / "You got a Champion's License!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc` and `text.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
 | Mountain battle background on the summit | `BattleSetup_GetTerrainId` in `src/battle_setup.c` |
 | No free switch when RED's Pokémon faints: Battle Style starts on SET and is locked in Options | `StartNewGame` in `src/dailyred.c`, `src/option_menu.c` |
 | RED as a trainer | `TRAINER_DAILYRED_RED` in `include/constants/opponents.h`, `src/data/trainers.h`, `src/dailyred_boss.c` |
 | Menus: POKéMON / OPTION / EXIT; party: SUMMARY / SWITCH / CANCEL | `src/start_menu.c`, `src/party_menu.c`; window height for short menus in `src/new_menu_helpers.c` |
-| RED's overworld sprite, in its own palette slot so it doesn't clash with LEAF's | `OBJ_EVENT_GFX_DAILYRED_RED` in `include/constants/event_objects.h`, `src/data/object_events/` |
+| RED's overworld sprite, in its own palette slot; the player uses Spenser's sprite (`OBJ_EVENT_GFX_SPENSER`) | `OBJ_EVENT_GFX_DAILYRED_RED` in `include/constants/event_objects.h`, `src/data/object_events/` |
 
 The battle itself is a standard FireRed trainer battle. The map script uses
 `trainerbattle_earlyrival` with `RIVAL_BATTLE_HEAL_AFTER`, the mode FireRed
@@ -304,7 +304,7 @@ npm run teams -- --random 40      # 40 random seeds
   mountain background.
 - battle style is SET from the start, the Options menu can't change it, and
   when one of RED's Pokémon is knocked out he sends the next one with no
-  "Will LEAF change POKéMON?" prompt.
+  "Will HORTE change POKéMON?" prompt.
 - RED's in-battle party is the configured team with IVs, items and EVs.
 - a win and a loss are each handled: no white-out, counters updated, and a new
   valid team afterwards.

@@ -14,6 +14,7 @@ replacements = {
     '.string "Try again tomorrow.$"': '.string "Vuelve a intentarlo mañana.$"',
     '.string "A new team of six is ready.\\n"': '.string "Ya tienes seis nuevos Pokémon.\\n"',
     '.string "Climb back up and face RED!$"': '.string "¡Sube de nuevo y reta a RED!$"',
+    '.string "You got a Champion\'s License!$"': '.string "Has obtenido una\\n"\n    .string "Licencia de Campeón.$"',
 }
 
 for source, target in replacements.items():

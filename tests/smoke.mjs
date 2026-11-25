@@ -175,7 +175,7 @@ try {
   const enemyParty = symbol('gEnemyParty'), battleMons = symbol('gBattleMons');
 
   // KO RED's lead while the rest of his team is healthy. In SHIFT style the
-  // game would now ask "Will LEAF change POKeMON?" and A would open the party
+  // game would now ask "Will HORTE change POKeMON?" and A would open the party
   // menu (leaving the battle screen); in SET style RED just sends the next one.
   await patchMemory(page, [
     { addr: battleMons + BMON_SIZE + BMON_HP, bytes: u16(1) },               // RED's active mon: 1 HP
