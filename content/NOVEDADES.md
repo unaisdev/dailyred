@@ -7,10 +7,6 @@ Tras publicar, este archivo se vacía otra vez.
 **Público:** castellano claro, sin jerga. Nada de tags, SHA, CI ni nombres técnicos.
 Si no lo entendería alguien que solo quiere jugar, no lo pongas.
 
-- Ahora juegas como HORTE, con el mismo protagonista que en Daily Steven.
-- Al vencer a RED recibes la Licencia de Campeón.
-- Los nombres de movimientos, especies y los mensajes de combate están en castellano.
-
 <!-- Ejemplo:
 - Arreglado: el combate del día se reiniciaba si cerrabas a medias.
 - RED ya no usa el mismo equipo dos días seguidos.
